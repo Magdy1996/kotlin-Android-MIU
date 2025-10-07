@@ -16,7 +16,7 @@ The application follows the architectural principles outlined in the project req
 
 Here are a few screenshots of the application in action:
 
-![App Screenshot 1](screenshots of the running app/SCREENSHOT_APP_1.png)
+![App Screenshot 1](screenshots/SCREENSHOT_APP_1.png)
 ![App Screenshot 2](screenshots/SCREENSHOT_APP_2.png)
 
 ### Test Report

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title_rainbow">A beautiful rainbow</string>
+    <string name="title_friends">A group of friends</string>
+    <string name="title_miu_campus">The MIU campus</string>
+    <string name="title_graduation">Graduation day</string>
+</resources>
