@@ -20,16 +20,23 @@ A modern Android application built with Kotlin and Jetpack Compose for managing 
 ### 📹 Video Walkthrough
 
 <p align="center">
-  <a href="./data/video/video.mp4">
-    <video width="600" controls>
-      <source src="./data/video/video.mp4" type="video/mp4">
-      <img src="https://img.shields.io/badge/▶️_Click_to_Watch_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo Video"/>
-    </video>
+  <a href="https://drive.google.com/file/d/1uNsrWLUt5mKaa-NUUY081PwCxIl9bBjr/view?usp=sharing" target="_blank">
+    <img src="https://img.shields.io/badge/▶️_Watch_Demo_Video-4285F4?style=for-the-badge&logo=googledrive&logoColor=white" alt="Watch Demo Video"/>
   </a>
 </p>
 
 <p align="center">
-  <em>👆 Click on the video player above to watch the full application walkthrough</em>
+  <a href="https://drive.google.com/file/d/1uNsrWLUt5mKaa-NUUY081PwCxIl9bBjr/view?usp=sharing" target="_blank">
+    <img src="https://drive.google.com/thumbnail?id=1uNsrWLUt5mKaa-NUUY081PwCxIl9bBjr&sz=w600" alt="App Demo Video Thumbnail" width="600"/>
+  </a>
+</p>
+
+<p align="center">
+  <strong>
+    <a href="https://drive.google.com/file/d/1uNsrWLUt5mKaa-NUUY081PwCxIl9bBjr/view?usp=sharing" target="_blank">
+      🎬 Click on the thumbnail or badge above to watch the full demo video
+    </a>
+  </strong>
 </p>
 
 ---
