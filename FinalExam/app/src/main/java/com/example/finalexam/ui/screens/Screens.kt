@@ -53,7 +53,7 @@ fun LoginScreen(onLogin: () -> Unit) {
 }
 
 @Composable
-fun HomeScreen(onOpenItems: () -> Unit) {
+fun HomeScreen(onOpenItems: (String?) -> Unit) {
     val homeViewModel: HomeViewModel = viewModel()
     val lastJoke by homeViewModel.lastJoke.collectAsState()
 
@@ -68,7 +68,7 @@ fun HomeScreen(onOpenItems: () -> Unit) {
             items(categories) { cat ->
                 Surface(modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onOpenItems() }
+                    .clickable { onOpenItems(cat) }
                     .padding(8.dp)) {
                     Text(text = cat, modifier = Modifier.padding(12.dp))
                 }
@@ -78,10 +78,16 @@ fun HomeScreen(onOpenItems: () -> Unit) {
 }
 
 @Composable
-fun ItemListScreen(onItemSelected: (Long) -> Unit) {
+fun ItemListScreen(onItemSelected: (Long) -> Unit, category: String? = null) {
     val itemViewModel: ItemViewModel = viewModel()
-    val items by itemViewModel.items.collectAsState()
+    val allItems by itemViewModel.items.collectAsState()
+    val items = if (category != null) {
+        allItems.filter { it.category == category }
+    } else {
+        allItems
+    }
     var showDialog by remember { mutableStateOf(false) }
+    var editingItem by remember { mutableStateOf<Item?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.fillMaxSize().padding(12.dp)) {
@@ -92,8 +98,7 @@ fun ItemListScreen(onItemSelected: (Long) -> Unit) {
                         Text(text = "${'$'}${item.price} x ${item.quantity} = ${'$'}${item.price * item.quantity}")
                     }
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit", modifier = Modifier.clickable {
-                        // quick edit: increment price by 50 for demo
-                        itemViewModel.update(item.copy(price = item.price + 50.0))
+                        editingItem = item
                     })
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", modifier = Modifier.clickable {
@@ -109,7 +114,7 @@ fun ItemListScreen(onItemSelected: (Long) -> Unit) {
 
         if (showDialog) {
             var name by remember { mutableStateOf("") }
-            var category by remember { mutableStateOf("ELECTRONICS") }
+            var itemCategory by remember { mutableStateOf(category ?: "ELECTRONICS") }
             var price by remember { mutableStateOf(0.0) }
             var quantity by remember { mutableStateOf(1) }
 
@@ -117,7 +122,7 @@ fun ItemListScreen(onItemSelected: (Long) -> Unit) {
                 Column {
                     OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") })
                     Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(value = category, onValueChange = { category = it }, label = { Text("Category") })
+                    OutlinedTextField(value = itemCategory, onValueChange = { itemCategory = it }, label = { Text("Category") })
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(value = if (price == 0.0) "" else price.toString(), onValueChange = { price = it.toDoubleOrNull() ?: 0.0 }, label = { Text("Price") })
                     Spacer(modifier = Modifier.height(8.dp))
@@ -125,10 +130,36 @@ fun ItemListScreen(onItemSelected: (Long) -> Unit) {
                 }
             }, confirmButton = {
                 Button(onClick = {
-                    val it = Item(name = name, category = category, price = price, quantity = quantity)
+                    val it = Item(name = name, category = itemCategory, price = price, quantity = quantity)
                     itemViewModel.insert(it)
                     showDialog = false
                 }) { Text("Confirm") }
+            })
+        }
+
+        // Edit dialog
+        if (editingItem != null) {
+            var name by remember { mutableStateOf(editingItem!!.name) }
+            var itemCategory by remember { mutableStateOf(editingItem!!.category) }
+            var price by remember { mutableStateOf(editingItem!!.price) }
+            var quantity by remember { mutableStateOf(editingItem!!.quantity) }
+
+            AlertDialog(onDismissRequest = { editingItem = null }, title = { Text("Edit Item") }, text = {
+                Column {
+                    OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") })
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(value = itemCategory, onValueChange = { itemCategory = it }, label = { Text("Category") })
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(value = price.toString(), onValueChange = { price = it.toDoubleOrNull() ?: price }, label = { Text("Price") })
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(value = quantity.toString(), onValueChange = { quantity = it.toIntOrNull() ?: quantity }, label = { Text("Quantity") })
+                }
+            }, confirmButton = {
+                Button(onClick = {
+                    val updated = editingItem!!.copy(name = name, category = itemCategory, price = price, quantity = quantity)
+                    itemViewModel.update(updated)
+                    editingItem = null
+                }) { Text("Update") }
             })
         }
     }

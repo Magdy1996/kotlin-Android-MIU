@@ -79,10 +79,16 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 })
             }
             composable(Screen.Home.route) {
-                HomeScreen(onOpenItems = { navController.navigate(Screen.ItemList.route) })
+                HomeScreen(onOpenItems = { category ->
+                    navController.navigate("${Screen.ItemList.route}?category=$category")
+                })
             }
-            composable(Screen.ItemList.route) {
-                ItemListScreen(onItemSelected = { id -> navController.navigate("${Screen.ItemDetail.route}/$id") })
+            composable("${Screen.ItemList.route}?category={category}") { backStack ->
+                val category = backStack.arguments?.getString("category")
+                ItemListScreen(
+                    onItemSelected = { id -> navController.navigate("${Screen.ItemDetail.route}/$id") },
+                    category = category
+                )
             }
             composable("${Screen.ItemDetail.route}/{itemId}") { backStack ->
                 val idStr = backStack.arguments?.getString("itemId")
